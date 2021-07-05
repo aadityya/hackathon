@@ -6,6 +6,7 @@ import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 import com.delta.hackathon.constants.Conversation;
 import com.delta.hackathon.external.RestCommunicator;
+import com.delta.hackathon.model.Enrollee;
 
 import static java.lang.String.format;
 
@@ -36,15 +37,14 @@ public class ResponseHelper {
 
     }
 
-    public SpeechletResponse getPinRequestMessage() {
+    public SpeechletResponse getSmileResponse(com.delta.hackathon.model.Enrollee info) {
 
-
-        String speechText = Conversation.PIN_REQUEST;
+        String speechText = Conversation.SMILE_RESPONSE;
 
         // Create the Simple card content.
 
         SimpleCard card = new SimpleCard();
-        card.setTitle(Conversation.PIN_REQUEST);
+        card.setTitle(Conversation.SMILE_RESPONSE);
         card.setContent(speechText);
 
         // Create the plain text output.
@@ -58,32 +58,8 @@ public class ResponseHelper {
         reprompt.setOutputSpeech(speech);
 
         return SpeechletResponse.newAskResponse(speech, reprompt, card);
-
     }
 
-    public SpeechletResponse getEnrolleeInformation(com.delta.hackathon.model.EnrolleeInfo enrolleeInfo) {
-
-        String speechText = format(Conversation.WELCOME_RESPONSE, enrolleeInfo.getEnrollees().get(0).getEnrolleeName());
-
-        // Create the Simple card content.
-
-        SimpleCard card = new SimpleCard();
-        card.setTitle(Conversation.WELCOME_RESPONSE);
-        card.setContent(speechText);
-
-        // Create the plain text output.
-
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText(speechText);
-
-        // Create reprompt
-
-        Reprompt reprompt = new Reprompt();
-        reprompt.setOutputSpeech(speech);
-
-        return SpeechletResponse.newAskResponse(speech, reprompt, card);
-
-    }
 
     public com.delta.hackathon.model.EnrolleeInfo getEnrolleeInformation(String enrolleeId) {
         com.delta.hackathon.external.RestCommunicator communicator = new RestCommunicator();
@@ -91,10 +67,26 @@ public class ResponseHelper {
         return info;
     }
 
+
+
     public SpeechletResponse getDeductibleInfo(com.delta.hackathon.model.Enrollee info) {
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        String individualMet = info.getIndividualRemainingDeductible() == 0.0 ? "Yes" : "No";
+        String familyMet = info.getFamilyRemainingDeductible() == 0.0 ? "But": "";
+
         String speechText = format(Conversation.DEDUCTIBLE_RESPONSE,
-                info.getDeductible(), info.getMet());
+                individualMet,
+                individualMet.equals("Yes") ? "" : "Not",
+                familyMet,
+                info.getFamilyRemainingDeductible());
+
+
 
         // Create the Simple card content.
 
@@ -115,29 +107,6 @@ public class ResponseHelper {
         return SpeechletResponse.newAskResponse(speech, reprompt, card);
     }
 
-    public SpeechletResponse getTicketDetails(com.delta.hackathon.model.Enrollee info) {
-
-        String speechText = format(Conversation.CALLBACK_RESPONSE,
-                info.getServiceTicketInfoList().get(0).getTicketNumber());
-
-        // Create the Simple card content.
-
-        SimpleCard card = new SimpleCard();
-        card.setTitle(Conversation.CALLBACK_RESPONSE);
-        card.setContent(speechText);
-
-        // Create the plain text output.
-
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText(speechText);
-
-        // Create reprompt
-
-        Reprompt reprompt = new Reprompt();
-        reprompt.setOutputSpeech(speech);
-
-        return SpeechletResponse.newAskResponse(speech, reprompt, card);
-    }
 
     public SpeechletResponse getExitMessage(com.delta.hackathon.model.Enrollee info) {
 

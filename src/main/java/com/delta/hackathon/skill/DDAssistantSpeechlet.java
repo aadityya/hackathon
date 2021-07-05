@@ -28,13 +28,10 @@ public class DDAssistantSpeechlet implements Speechlet {
 
         System.out.println("--------------->" + intentName);
 
-
-        if ("EnrolleeIdIntent".equals(intentName)) {
-            return helper.getPinRequestMessage();
-        } else if ("PinIntent".equals(intentName)) {
+        if ("PinIntent".equals(intentName)) {
             com.delta.hackathon.model.EnrolleeInfo info = helper.getEnrolleeInformation("1234");
             session.setAttribute("enrolleeInfo", info);
-            return helper.getEnrolleeInformation(info);
+            return helper.getSmileResponse(info.getEnrollees().get(0));
         } else if ("DeductibleIntent".equals(intentName)) {
             System.out.println("----*---->" + session.getAttributes());
             Map<String, List<com.delta.hackathon.model.Enrollee>> info = (Map) session.getAttribute("enrolleeInfo");
@@ -43,15 +40,7 @@ public class DDAssistantSpeechlet implements Speechlet {
             System.out.println("----*;;---->" + session.getAttributes());
             System.out.println(";;;;;" + eInfo.getEnrollees().get(0).getDeductible());
             return helper.getDeductibleInfo(eInfo.getEnrollees().get(0));
-        } else if ("TicketIntent".equals(intentName)) {
-            System.out.println("----*---->" + session.getAttributes());
-            Map<String, List<com.delta.hackathon.model.Enrollee>> info = (Map) session.getAttribute("enrolleeInfo");
-            ObjectMapper mapper = new ObjectMapper();
-            com.delta.hackathon.model.EnrolleeInfo eInfo = mapper.convertValue(info, com.delta.hackathon.model.EnrolleeInfo.class);
-            System.out.println("----*;;---->" + session.getAttributes());
-            System.out.println(";;;;;" + eInfo.getEnrollees().get(0).getDeductible());
-            return helper.getTicketDetails(eInfo.getEnrollees().get(0));
-        } else if ("ExitIntent".equals(intentName)) {
+        }  else if ("ExitIntent".equals(intentName)) {
             System.out.println("*********-----******" + session.getAttributes());
             Map<String, List<com.delta.hackathon.model.Enrollee>> info = (Map) session.getAttribute("enrolleeInfo");
             ObjectMapper mapper = new ObjectMapper();

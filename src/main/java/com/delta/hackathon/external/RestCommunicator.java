@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestCommunicator {
     public EnrolleeInfo getEnrolleeInfo(String enrolleeId) {
         RestTemplate restTemplate = new RestTemplate();
-        String enroleeEndpoint = "https://run.mocky.io/v3/aa619473-5ba7-4a7b-a680-329b61aaf3da";
+        String enroleeEndpoint = "https://run.mocky.io/v3/352470ba-96a0-4af5-aed0-a38451f0a443";
         ResponseEntity<EnrolleeInfo> response = restTemplate.getForEntity(enroleeEndpoint, EnrolleeInfo.class);
         System.out.println(response.getBody().getEnrollees().get(0).getEnrolleeName());
         return response.getBody();
