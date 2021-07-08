@@ -71,12 +71,6 @@ public class ResponseHelper {
 
     public SpeechletResponse getDeductibleInfo(com.delta.hackathon.model.Enrollee info) {
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String individualMet = info.getIndividualRemainingDeductible() == 0.0 ? "Yes" : "No";
         String familyMet = info.getFamilyRemainingDeductible() == 0.0 ? "But": "";
 
@@ -111,29 +105,25 @@ public class ResponseHelper {
     public SpeechletResponse getExitMessage(com.delta.hackathon.model.Enrollee info) {
 
         String speechText = format(Conversation.EXIT_RESPONSE, info.getEnrolleeName());
-        System.out.println("1");
 
         // Create the Simple card content.
 
         SimpleCard card = new SimpleCard();
         card.setTitle(Conversation.EXIT_RESPONSE);
         card.setContent(speechText);
-        System.out.println("2");
 
         // Create the plain text output.
 
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText(speechText);
 
-        System.out.println("3");
 
         // Create reprompt
 
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(speech);
 
-        System.out.println("4");
-
+      
         return SpeechletResponse.newAskResponse(speech, reprompt, card);
     }
 }
